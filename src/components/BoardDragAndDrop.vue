@@ -1,55 +1,83 @@
-<script setup lang="ts">
-import type { Board } from '@/types';
-import { useRoute } from 'vue-router';
-import ImageDropzone from "@/components/ImageDropzone.vue";
-import { ref, toRefs } from "vue";
-
-const $route = useRoute()
+<script setup>
+import { watch, reactive, toRaw } from "vue";
+import { cloneDeep } from "lodash-es";
+import draggable from "vuedraggable";
+import { v4 as uuidv4 } from "uuid";
 
 const props = defineProps({
-  id: String,
-});
-const { id: boardId } = toRefs(props);
-const board = ref({
-  id: boardId.value,
-  title: "Let's have an amazing time at Vue.js forge!! 🍍",
-  order: JSON.stringify([
-    { id: "1", title: "backlog 🌴", taskIds: ["1", "2"] },
-  ]),
+  board: Object,
+  tasks: Array,
 });
 
-const tasks = ref([
-  { id: "1", title: "Code like mad people!" },
-  { id: "2", title: "Push clean code" },
-]);
-const updateBoard = (b) => {
-  board.value = b;
-  // alerts.success("Board updated!");
-};
+// emits
+const emit = defineEmits(["update"]);
+
+// local data
+const tasks = reactive(cloneDeep(props.tasks));
+const board = reactive(cloneDeep(props.board));
+const columns = reactive(JSON.parse(board.order));
+
+const addColumn = () =>
+    columns.push({id: uuidv4(), title: "New column", taskIds: []});
+
+watch(columns, () =>
+    emit(
+        "update",
+        cloneDeep({
+          ...props.board,
+          order: JSON.stringify(toRaw(columns)),
+        })
+    )
+);
 </script>
 
 <template>
-  <ImageDropzone />
-  <div>
-    <!-- <app-page-heading>
-      {{ board.title }}
-    </app-page-heading> -->
-
-    <board-drag-and-drop :tasks="tasks" :board="board" @update="updateBoard" />
-
-    <details>
-      <pre>
-        {{ board }}
-      </pre>
-    </details>
+  <button class="text-gray-500" @click="addColumn">New Column +</button>
+  <div class="flex items-start py-12">
+    <div v-for="column in columns">
+      <div
+          class="column bg-gray-100 flex flex-col justify-between rounded-lg px-3 py-3 rounded mr-4 w-[300px]"
+      >
+        <h2>{{ column.title }}</h2>
+        <task-card
+            v-for="task in tasks"
+            :task="task"
+            class="mt-3 cursor-move"
+        />
+      </div>
+    </div>
+    <!--
+    <draggable
+        :list="columns"
+        group="columns"
+        item-key="id"
+        class="flex flex-grow-0 flex-shrink-0 overflow-x-scroll"
+    >
+      <template #item="{ element: column }">
+        <div
+            class="column bg-gray-100 flex flex-col justify-between rounded-lg px-3 py-3 rounded mr-4 w-[300px]"
+        >
+          <h2>{{ column.title }}</h2>
+          <! -- //! inner block -- >
+          <draggable
+              :list="column.taskIds"
+              group="tasks"
+              item-key="uid"
+              :animation="200"
+              ghost-class="ghost-card"
+              class="min-h-[400px]"
+          >
+            <template #item="{ element: taskId }">
+              <task-card
+                  v-if="tasks.find((t) => t.id === taskId)"
+                  :task="tasks.find((t) => t.id === taskId)"
+                  class="mt-3 cursor-move"
+              />
+            </template>
+          </draggable>
+        </div>
+      </template>
+    </draggable>
+    -->
   </div>
 </template>
-
-<style scoped>
-pre {
-  width: 400px;
-  overflow-x: auto;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-}
-</style>

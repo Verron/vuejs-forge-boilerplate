@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import type { Board } from '@/types';
-import { useRoute } from 'vue-router';
 import { ref, toRefs } from "vue";
-import ImageDropzone from "@/components/ImageDropzone.vue";
 
 const props = defineProps({
   id: String,
@@ -28,19 +25,10 @@ const updateBoard = (b) => {
 </script>
 
 <template>
-  <ImageDropzone />
+  <div>{{ board.title }}</div>
   <div>
-    <!-- <app-page-heading>
-      {{ board.title }}
-    </app-page-heading> -->
 
     <board-drag-and-drop :tasks="tasks" :board="board" @update="updateBoard" />
-
-    <details>
-      <pre>
-        {{ board }}
-      </pre>
-    </details>
   </div>
 </template>
 
