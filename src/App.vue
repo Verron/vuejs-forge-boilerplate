@@ -7,6 +7,7 @@ import { ref, computed } from 'vue';
 import { Drawer, DrawerContent } from "@progress/kendo-vue-layout";
 import { useRouter, type RouteLocationRaw } from 'vue-router';
 import { useLocalStorage } from "@vueuse/core";
+import Alerts from "./components/Alerts.vue";
 
 
 const showTeamDropdown = ref(false);
@@ -40,7 +41,7 @@ const items = [{
   },
 }, {
   text: "Collapse",
-  icon: expandedIcon,
+  icon: "k-i-arrow-chevron-left",
   data: {
     action: () => (expanded.value = !expanded.value)
    },
@@ -82,8 +83,8 @@ const toggleTeams = () => {
         <KButton rounded="full" shape="rectangle" icon="logout" theme-color="warning">Logout</KButton>
       </div>
     </div>
-    <Drawer class="flex-1" :expanded="expanded" position="start"
-            mode="push" :mini="true" :items="
+    <Drawer class="flex-1" :expanded="expanded" position="start" mode="push" :mini="true" 
+    :items="
       items.map((item, index) => ({
         ...item,
         selected: index === selected,
@@ -94,4 +95,5 @@ const toggleTeams = () => {
       </DrawerContent>
     </Drawer>
   </div>
+  <Alerts></Alerts>
 </template>
