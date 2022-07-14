@@ -1,16 +1,24 @@
 <script setup lang="ts">
 import { Popup as KPopup } from "@progress/kendo-vue-popup";
 import { Button as KButton } from "@progress/kendo-vue-buttons";
-import { ref } from "vue";
+import { ref, toRef } from "vue";
 import type { Board } from "@/types";
-const props = defineProps<{
+
+export interface Props {
   board: Board;
-}>();
+}
+
+export interface Emits {
+  (e: "deleteBoard", payload: Board): void;
+}
+
+const props = defineProps<Props>();
+
 const show = ref(false);
 const menu = ref(null);
-defineEmits<{
-  (e: "deleteBoard", payload: null): void;
-}>();
+defineEmits<Emits>();
+
+const board = toRef(props, "board");
 </script>
 <template>
   <div>
@@ -37,7 +45,7 @@ defineEmits<{
       <div class="p-5" ref="menu">
         <ul>
           <li class="text-red-500 whitespace-nowrap">
-            <button @click="$emit('deleteBoard', null)">
+            <button @click="$emit('deleteBoard', board)">
               <span class="k-icon k-i-delete"></span>
               Delete Board
             </button>

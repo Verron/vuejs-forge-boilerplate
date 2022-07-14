@@ -9,9 +9,7 @@
       />
       <h1>Welcome!</h1>
       <AppButton class="block">
-        <a href="https://vi.to/hubs/vuejs-forge/" target="_blank"
-          >Live Event</a
-        >
+        <a href="https://vi.to/hubs/vuejs-forge/" target="_blank">Live Event</a>
       </AppButton>
     </div>
   </div>
