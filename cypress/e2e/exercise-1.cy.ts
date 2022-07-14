@@ -1,5 +1,5 @@
 describe("Exercise 1", () => {
-  it("visits the app root url", () => {
+  it("Interacts with boards", () => {
     cy.visit("/boards");
     cy.contains("div", "Board 1");
     cy.contains("div", "Board 2");

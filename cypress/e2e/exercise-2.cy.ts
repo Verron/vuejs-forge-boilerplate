@@ -1,5 +1,5 @@
 describe("Exercise 2", () => {
-  it("visits the app root url", () => {
+  it("Interacts with navigation", () => {
     cy.visit("/")
     cy.contains("My Team").click()
     cy.contains("Team 1")

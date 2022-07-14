@@ -5,7 +5,7 @@
 </script>
 
 <template>
-  <div class="p-5 bg-white">
+  <div class="p-5 bg-white" :data-task-id="task.id">
     {{ task }}
   </div>
 </template>

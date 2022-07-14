@@ -1,4 +1,4 @@
-describe("Exercise 1", () => {
+describe("Exercise 4", () => {
     it("Alerts changes", () => {
         cy.visit("/boards");
         cy.contains("New Board +").click();
