@@ -16,9 +16,15 @@ const props = defineProps<Props>();
 
 const show = ref(false);
 const menu = ref(null);
-defineEmits<Emits>();
+
+const emit = defineEmits<Emits>();
 
 const board = toRef(props, "board");
+
+const confirmDeleteBoard = (board: Board) => {
+  if (confirm("Are you sure you want to delete board?"))
+    emit("deleteBoard", board);
+};
 </script>
 <template>
   <div>
@@ -45,7 +51,7 @@ const board = toRef(props, "board");
       <div class="p-5" ref="menu">
         <ul>
           <li class="text-red-500 whitespace-nowrap">
-            <button @click="$emit('deleteBoard', board)">
+            <button @click="confirmDeleteBoard(board)">
               <span class="k-icon k-i-delete"></span>
               Delete Board
             </button>

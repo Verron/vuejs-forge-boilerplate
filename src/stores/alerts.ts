@@ -13,7 +13,7 @@ export interface AlertOptions {
 const defaultOptions: Required<AlertOptions> = {
   closable: true,
   html: false,
-  timeout: 30000,
+  timeout: 3000,
   style: "info",
 };
 

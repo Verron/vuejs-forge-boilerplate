@@ -64,7 +64,7 @@ const updateBoard = (b: Board) => {
 };
 
 const deleteBoardIfConfirmed = () => {
-  console.log("delete board");
+  $alerts.success("Board deleted!");
 };
 </script>
 
