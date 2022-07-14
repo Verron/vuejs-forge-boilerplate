@@ -7,7 +7,6 @@ import { ref, computed } from 'vue';
 import { Drawer, DrawerContent } from "@progress/kendo-vue-layout";
 import { useRouter, type RouteLocationRaw } from 'vue-router';
 import { useLocalStorage } from "@vueuse/core";
-import Alerts from "./components/Alerts.vue";
 
 
 const showTeamDropdown = ref(false);
@@ -95,5 +94,5 @@ const toggleTeams = () => {
       </DrawerContent>
     </Drawer>
   </div>
-  <Alerts></Alerts>
+  <alerts></alerts>
 </template>
