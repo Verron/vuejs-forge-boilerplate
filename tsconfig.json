@@ -13,5 +13,6 @@
     {
       "path": "./tsconfig.vitest.json"
     }
-  ]
+  ],
+  "include": ["./components.d.ts"]
 }
