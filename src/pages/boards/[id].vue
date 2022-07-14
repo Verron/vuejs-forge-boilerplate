@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useAlerts } from "@/stores/alerts";
-import type { Board } from "@/types";
+import type { Board, Task } from "@/types";
 import { ref, toRef } from "vue";
 
 export interface Props {
@@ -23,9 +23,9 @@ const board = ref<Board>({
   deletedAt: new Date,
 });
 
-const tasks = ref([
-  { id: "1", title: "Code like mad people!" },
-  { id: "2", title: "Push clean code" },
+const tasks = ref<Task[]>([
+  { id: "1", title: "Code like mad people!", labels: [], dueAt: new Date, createdAt: new Date, updatedAt: new Date },
+  { id: "2", title: "Push clean code" , labels: [], dueAt: new Date, createdAt: new Date, updatedAt: new Date},
 ]);
 const updateBoard = (b: Board) => {
   board.value = b;

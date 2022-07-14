@@ -25,13 +25,38 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 //
-// declare global {
-//   namespace Cypress {
-//     interface Chainable {
-//       login(email: string, password: string): Chainable<void>
-//       drag(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       dismiss(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       visit(originalFn: CommandOriginalFn, url: string, options: Partial<VisitOptions>): Chainable<Element>
-//     }
-//   }
-// }
+declare namespace Cypress {
+    interface Chainable {
+        dragTo(target: string, dataTranser: DataTransfer): Chainable<HTMLElement>
+        dragElementToTarget(element: string, target: string): Chainable<HTMLElement>
+    }
+}
+
+
+Cypress.Commands.add("dragTo", { prevSubject: "element" }, (subject, targetEl, dataTransfer) => {
+    cy.wrap(subject)
+        .trigger("pointerdown", { which: 1, button: 0, eventConstructor: "PointerEvent" })
+        .trigger("mousedown", { which: 1, button: 0, eventConstructor: "MouseEvent" })
+        .trigger("dragstart", { dataTransfer, eventConstructor: "DragEvent" });
+
+    cy.get(targetEl)
+        .trigger("dragover", { dataTransfer, eventConstructor: "DragEvent" })
+        .trigger("mousemove", { eventConstructor: "MouseEvent" })
+        .trigger("pointermove", { eventConstructor: "PointerEvent" })
+        .wait(100)
+        .trigger("drop", { dataTransfer, eventConstructor: "DragEvent" })
+        .then(() => {
+            cy.get(targetEl).trigger("mouseup", { which: 1, button: 0, eventConstructor: "MouseEvent" }).then(() => {
+                cy.get(targetEl).trigger("pointerup", { which: 1, button: 0, eventConstructor: "PointerEvent" }).then(() => {
+                    cy.get(targetEl).should('exist')
+                    cy.log('what is this', subject)
+                })
+            })
+        })
+        ;
+  }
+);
+
+Cypress.Commands.add("dragElementToTarget", (element, target) => {
+    cy.get(element).dragTo(target, new DataTransfer());
+});

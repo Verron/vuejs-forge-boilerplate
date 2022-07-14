@@ -4,7 +4,7 @@ export interface Resource8base {
   id: ID;
   createdAt: Date;
   updatedAt: Date;
-  deletedAt: Date;
+  deletedAt?: Date;
 }
 
 export interface User extends Resource8base {
@@ -35,7 +35,7 @@ export interface Column {
 
 export interface Task extends Resource8base {
   title: string;
-  description: string;
+  description?: string;
   labels: Label[];
   dueAt: Date;
 
