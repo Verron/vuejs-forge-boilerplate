@@ -2,6 +2,7 @@
 import { useAlerts } from "@/stores/alerts";
 import type { Board, Task } from "@/types";
 import { ref, toRef } from "vue";
+import { v4 as uuidv4 } from "uuid";
 
 export interface Props {
   id: string
@@ -27,17 +28,37 @@ const tasks = ref<Task[]>([
   { id: "1", title: "Code like mad people!", labels: [], dueAt: new Date, createdAt: new Date, updatedAt: new Date },
   { id: "2", title: "Push clean code" , labels: [], dueAt: new Date, createdAt: new Date, updatedAt: new Date},
 ]);
+
+const addTask = async (task: Task) => {
+  return new Promise((resolve, reject) => {
+    const taskWithTheId: Task = {
+      ...task,
+      id: uuidv4(),
+      createdAt: new Date,
+      updatedAt: new Date,
+      labels: [],
+      dueAt: new Date,
+    };
+    tasks.value.push(taskWithTheId);
+    resolve(taskWithTheId);
+  });
+}
+
 const updateBoard = (b: Board) => {
   board.value = b;
   $alerts.success("Board updated!");
 };
+
+const deleteBoardIfConfirmed = () => {
+  console.log("delete board");
+};
 </script>
 
 <template>
-  <div>{{ board.title }}</div>
+  <app-page-heading>{{ board.title }}</app-page-heading>
+  <board-menu :board="board" @deleteBoard="deleteBoardIfConfirmed"></board-menu>
   <div>
-
-    <board-drag-and-drop :tasks="tasks" :board="board" @update="updateBoard" />
+    <board-drag-and-drop :tasks="tasks" :board="board" @update="updateBoard" :add-task="addTask" />
   </div>
 </template>
 
