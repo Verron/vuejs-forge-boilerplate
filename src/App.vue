@@ -90,7 +90,9 @@ const toggleTeams = () => {
       }))
     " @select="onSelect">
       <DrawerContent>
-        <RouterView />
+        <div class="p-5">
+          <RouterView />
+        </div>
       </DrawerContent>
     </Drawer>
   </div>

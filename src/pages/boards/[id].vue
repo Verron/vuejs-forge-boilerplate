@@ -34,8 +34,8 @@ const updateBoard = (b: Board) => {
 </script>
 
 <template>
-  <div class="p-2">{{ board.title }}</div>
-  <div class="p-2">
+  <div>{{ board.title }}</div>
+  <div>
 
     <board-drag-and-drop :tasks="tasks" :board="board" @update="updateBoard" />
   </div>
