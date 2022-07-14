@@ -10,12 +10,16 @@
     "test:e2e:ci": "start-server-and-test preview http://127.0.0.1:4173/ 'cypress run --e2e'",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "schema": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
+    "@apollo/client": "^3.6.9",
+    "@rollup/plugin-graphql": "^1.1.0",
     "@types/uuid": "^8.3.4",
     "@vue/apollo-composable": "^4.0.0-alpha.18",
     "@vueuse/core": "^8.9.2",
+    "graphql": "^16.5.0",
     "graphql-tag": "^2.12.6",
     "lodash-es": "^4.17.21",
     "pinia": "^2.0.16",
@@ -27,6 +31,7 @@
     "vuedraggable": "^4.1.0"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "2.8.1",
     "@progress/kendo-licensing": "^1.2.2",
     "@progress/kendo-theme-default": "^5.5.0",
     "@progress/kendo-vue-animation": "^3.4.0",
@@ -62,7 +67,12 @@
     "typescript": "~4.7.4",
     "vite": "^2.9.12",
     "vitest": "^0.15.1",
-    "vue-tsc": "^0.38.1"
+    "vue-tsc": "^0.38.1",
+    "@graphql-codegen/typescript": "2.7.1",
+    "@graphql-codegen/typescript-operations": "2.5.1",
+    "@graphql-codegen/typescript-document-nodes": "2.3.1",
+    "@graphql-codegen/typescript-graphql-files-modules": "2.2.0",
+    "@graphql-codegen/introspection": "2.2.0"
   },
   "eslintIgnore": [
     "tailwind.config.js",

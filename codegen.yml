@@ -1,0 +1,13 @@
+overwrite: true
+schema: "https://api.8base.com/cl5job2n400gd09l07rx49rqk"
+documents: "src/**/*.gql"
+generates:
+  graphql.d.ts:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-graphql-files-modules"
+      - "typescript-document-nodes"
+  ./graphql.schema.json:
+    plugins:
+      - "introspection"
