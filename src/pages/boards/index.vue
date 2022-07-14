@@ -1,5 +1,5 @@
 <template>
-    <div class="p-5">
+    <div>
         <h1>Boards</h1>
         <div class="flex flex-wrap">
             <div v-for="board in boards" :key="board.id" @click="toBoard(board)" class="w-72 m-5 cursor-pointer border rounded border-transparent hover:border-gray-300">

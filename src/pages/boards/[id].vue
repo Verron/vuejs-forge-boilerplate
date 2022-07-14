@@ -1,26 +1,35 @@
 <script setup lang="ts">
-import { ref, toRefs } from "vue";
+import { useAlerts } from "@/stores/alerts";
+import type { Board } from "@/types";
+import { ref, toRef } from "vue";
 
-const props = defineProps({
-  id: String,
-});
-const { id: boardId } = toRefs(props);
+export interface Props {
+  id: string
+}
 
-const board = ref({
+const props = defineProps<Props>()
+
+const $alerts = useAlerts()
+const boardId = toRef(props, 'id');
+
+const board = ref<Board>({
   id: boardId.value,
   title: "Let's have an amazing time at Vue.js forge!! 🍍",
   order: JSON.stringify([
     { id: "1", title: "backlog 🌴", taskIds: ["1", "2"] },
   ]),
+  createdAt: new Date,
+  updatedAt: new Date,
+  deletedAt: new Date,
 });
 
 const tasks = ref([
   { id: "1", title: "Code like mad people!" },
   { id: "2", title: "Push clean code" },
 ]);
-const updateBoard = (b) => {
+const updateBoard = (b: Board) => {
   board.value = b;
-  // alerts.success("Board updated!");
+  $alerts.success("Board updated!");
 };
 </script>
 

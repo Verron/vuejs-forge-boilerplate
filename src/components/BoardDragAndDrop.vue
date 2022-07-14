@@ -34,19 +34,6 @@ watch(columns, () =>
 <template>
   <button class="text-gray-500" @click="addColumn">New Column +</button>
   <div class="flex items-start py-12">
-    <div v-for="column in columns">
-      <div
-          class="column bg-gray-100 flex flex-col justify-between rounded-lg px-3 py-3 rounded mr-4 w-[300px]"
-      >
-        <h2>{{ column.title }}</h2>
-        <task-card
-            v-for="task in tasks"
-            :task="task"
-            class="mt-3 cursor-move"
-        />
-      </div>
-    </div>
-    <!--
     <draggable
         :list="columns"
         group="columns"
@@ -58,7 +45,6 @@ watch(columns, () =>
             class="column bg-gray-100 flex flex-col justify-between rounded-lg px-3 py-3 rounded mr-4 w-[300px]"
         >
           <h2>{{ column.title }}</h2>
-          <! -- //! inner block -- >
           <draggable
               :list="column.taskIds"
               group="tasks"
@@ -78,6 +64,6 @@ watch(columns, () =>
         </div>
       </template>
     </draggable>
-    -->
+   
   </div>
 </template>
