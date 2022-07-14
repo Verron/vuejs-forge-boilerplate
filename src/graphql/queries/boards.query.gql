@@ -1,3 +1,5 @@
+#import "../fragments/board.fragment.graphql"
+
 query BoardsList {
   boardsList {
     items {

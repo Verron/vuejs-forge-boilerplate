@@ -14,6 +14,8 @@ declare module '@vue/runtime-core' {
     BoardDragAndDrop: typeof import('./src/components/BoardDragAndDrop.vue')['default']
     BoardMenu: typeof import('./src/components/BoardMenu.vue')['default']
     ImageDropzone: typeof import('./src/components/ImageDropzone.vue')['default']
+    NavbarArea: typeof import('./src/components/NavbarArea.vue')['default']
+    NavigationArea: typeof import('./src/components/NavigationArea.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     TaskCard: typeof import('./src/components/TaskCard.vue')['default']

@@ -46,7 +46,7 @@ const newBoardPayload = computed(() => ({
   <div class="relative">
     <app-loader v-if="loading" overlay></app-loader>
     <h1>Boards</h1>
-    <div class="flex flex-wrape">
+    <div v-if="!loading" class="flex flex-wrape">
       <div
         v-for="board in boards"
         :key="board.id"
@@ -58,7 +58,7 @@ const newBoardPayload = computed(() => ({
       </div>
 
       <div
-        @click="createBoard()"
+        @click="createBoard(newBoardPayload)"
         class="w-72 m-5 cursor-pointer border rounded border-transparent hover:border-gray-300 flex items-center justify-center min-h-[220px]"
       >
         New Board +

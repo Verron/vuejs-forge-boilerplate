@@ -26,10 +26,7 @@ const $alerts = useAlerts();
 // local data
 const tasks = reactive<Task[]>(cloneDeep(props.tasks));
 const board = reactive<Board>(cloneDeep(props.board));
-const columns =
-  typeof board.order === "string"
-    ? reactive<Column[]>(JSON.parse(board.order))
-    : reactive<Column[]>(cloneDeep(board.order));
+const columns = typeof board.order === "string" ? reactive<Column[]>(JSON.parse(board.order)) : reactive<Column[]>(cloneDeep(board.order || []));
 
 const addColumn = () =>
   columns.push({ id: uuidv4(), title: "New column", taskIds: [] });
@@ -53,11 +50,16 @@ const addTask = async ({
 }) => {
   const newTask = { title };
   try {
+    console.log('one')
     const savedTask = await props.addTask(newTask);
+    console.log('two')
     tasks.push({ ...savedTask });
+    console.log('three')
     column.taskIds.push(savedTask.id);
+    console.log('four')
   } catch (error) {
     $alerts.error("Error creating task!");
+    console.error(tasks, column, error);
   }
 };
 </script>
@@ -77,7 +79,15 @@ const addTask = async ({
           :data-column-index="columnIndex"
         >
           <div class="flex flex-col flex-1">
-            <h3>{{ column.title }}</h3>
+            <h3>
+              <input
+                type="text"
+                :value="column.title"
+                class="bg-transparent mb-2"
+                @keydown.enter="($event.target as HTMLInputElement).blur()"
+                @blur="column.title = ($event.target as HTMLInputElement).value"
+              />
+            </h3>
             <draggable
               :list="column.taskIds"
               group="tasks"

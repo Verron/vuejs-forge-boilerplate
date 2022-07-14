@@ -19,7 +19,8 @@ const $router = useRouter();
 const $route = useRoute();
 
 const toRoute = (task: Task) => {
-  $router.push(`/boards/${$route.params.id}/tasks/${task.id}`);
+  console.log('go to route', task)
+  // $router.push(`/boards/${$route.params.id}/tasks/${task.id}`);
 };
 </script>
 <template>
