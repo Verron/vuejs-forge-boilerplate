@@ -81,7 +81,7 @@ const addTask = async ({
             <draggable
               :list="column.taskIds"
               group="tasks"
-              item-key="uid"
+              item-key="id"
               :animation="200"
               ghost-class="ghost-card"
               class="min-h-[400px] flex-1"

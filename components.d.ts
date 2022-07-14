@@ -8,6 +8,7 @@ declare module '@vue/runtime-core' {
     AlertArea: typeof import('./src/components/AlertArea.vue')['default']
     Alerts: typeof import("./src/components/Alerts.vue")["default"];
     AppButton: typeof import('./src/components/AppButton.vue')['default']
+    AppLoader: typeof import('./src/components/AppLoader.vue')['default']
     AppPageHeading: typeof import('./src/components/AppPageHeading.vue')['default']
     BoardCard: typeof import('./src/components/BoardCard.vue')['default']
     BoardDragAndDrop: typeof import('./src/components/BoardDragAndDrop.vue')['default']

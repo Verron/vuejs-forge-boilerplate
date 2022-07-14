@@ -1,8 +1,15 @@
 <script setup lang="ts">
 import { useAlerts } from "@/stores/alerts";
 import type { Board, Task } from "@/types";
-import { ref, toRef } from "vue";
+import { useRouter } from "vue-router";
+import { toRef, computed } from "vue";
 import { v4 as uuidv4 } from "uuid";
+
+import { useQuery, useMutation } from "@vue/apollo-composable";
+import getBoardQuery from "@/graphql/queries/board.query.gql";
+import boardsQuery from "@/graphql/queries/boards.query.gql";
+import deleteBoardMutation from "@/graphql/mutations/deleteBoard.mutation.gql";
+import updateBoardMutation from "@/graphql/mutations/updateBoard.mutation.gql";
 
 export interface Props {
   id: string;
@@ -11,41 +18,21 @@ export interface Props {
 const props = defineProps<Props>();
 
 const $alerts = useAlerts();
+const $router = useRouter();
 const boardId = toRef(props, "id");
 
-const board = ref<Board>({
-  id: boardId.value,
-  title: "Let's have an amazing time at Vue.js forge!! 🍍",
-  order: JSON.stringify([
-    { id: "1", title: "backlog 🌴", taskIds: ["1", "2"] },
-  ]),
-  createdAt: new Date(),
-  updatedAt: new Date(),
-  deletedAt: new Date(),
-});
-
-const tasks = ref<Task[]>([
-  {
-    id: "1",
-    title: "Code like mad people!",
-    labels: [],
-    dueAt: new Date(),
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    id: "2",
-    title: "Push clean code",
-    labels: [],
-    dueAt: new Date(),
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-]);
+const {
+  result: boardData,
+  loading: loadingBoard,
+  onError: onBoardError,
+} = useQuery(getBoardQuery, { id: boardId.value });
+onBoardError(() => $alerts.error("Error loading board"));
+const board = computed(() => boardData.value?.board || null);
+const tasks = computed(() => board.value?.tasks?.items);
 
 const addTask = async (task: Task) => {
   return new Promise((resolve) => {
-    const taskWithTheId: Task = {
+    const taskWithId: Task = {
       ...task,
       id: uuidv4(),
       createdAt: new Date(),
@@ -53,17 +40,31 @@ const addTask = async (task: Task) => {
       labels: [],
       dueAt: new Date(),
     };
-    tasks.value.push(taskWithTheId);
-    resolve(taskWithTheId);
+    tasks.value.push(taskWithId);
+    resolve(taskWithId);
   });
 };
 
-const updateBoard = (b: Board) => {
-  board.value = b;
-  $alerts.success("Board updated!");
-};
+const { mutate: updateBoard } = useMutation(updateBoardMutation);
 
-const deleteBoardIfConfirmed = () => {
+const { mutate: deleteBoard, onError: onErrorDeletingBoard } = useMutation(
+  deleteBoardMutation,
+  {
+    update(cache, { data: { boardDelete } }) {
+      console.log(boardDelete);
+      cache.updateQuery({ query: boardsQuery }, (res) => ({
+        boardsList: {
+          items: res.boardsList.items.filter(
+            (b: Board) => b.id !== boardId.value
+          ),
+        },
+      }));
+    },
+  }
+);
+onErrorDeletingBoard(() => $alerts.error("Error deleting board"));
+
+const deleteBoardIfConfirmed = async () => {
   $alerts.success("Board deleted!");
 };
 </script>
@@ -71,7 +72,8 @@ const deleteBoardIfConfirmed = () => {
 <template>
   <app-page-heading>{{ board.title }}</app-page-heading>
   <board-menu :board="board" @deleteBoard="deleteBoardIfConfirmed"></board-menu>
-  <div>
+  <div class="relative">
+    <app-loader v-if="loadingBoard" overlay></app-loader>
     <board-drag-and-drop
       :tasks="tasks"
       :board="board"

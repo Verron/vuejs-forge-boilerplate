@@ -1,7 +1,52 @@
+<script setup lang="ts">
+import type { Board } from "@/types";
+
+import { useRouter } from "vue-router";
+import { ref } from "vue";
+import type { Ref } from "vue";
+import { useAlerts } from "@/stores/alerts";
+// @ts-ignore
+import boardsQuery from "@/graphql/queries/boards.query.gql"; 
+// @ts-ignore
+import createBoardMutation from "@/graphql/mutations/createBoard.mutation.gql";
+import { useMutation, useQuery } from "@vue/apollo-composable";
+import { computed } from "@vue/reactivity";
+
+
+const $router = useRouter();
+const $alerts = useAlerts();
+
+const { result, loading, onError } = useQuery(boardsQuery);
+const boards = computed(() => result.value?.boardsList?.items || []);
+
+const toBoard = (board: Board) => $router.push(`/boards/${board.id}`);
+
+onError(() => $alerts.error("Error loading boards"));
+
+const { mutate: createBoard, onDone: onCreateBoardDone } = useMutation(createBoardMutation, () => ({
+  update(cache, { data: { boardCreate } }) {
+    cache.updateQuery({ query: boardsQuery }, (res) => ({
+      boardsList: {
+        items: [...res.boardsList.items, boardCreate],
+      },
+    }));
+  },
+}));
+
+onCreateBoardDone(() => $alerts.success('Board Created!'))
+
+const newBoardPayload = computed(() => ({
+  data: {
+    title: `Board ${(boards.value.length || 0) + 1}`
+  },
+}));
+</script>
+
 <template>
-  <div>
+  <div class="relative">
+    <app-loader v-if="loading" overlay></app-loader>
     <h1>Boards</h1>
-    <div class="flex flex-wrap">
+    <div class="flex flex-wrape">
       <div
         v-for="board in boards"
         :key="board.id"
@@ -14,69 +59,10 @@
 
       <div
         @click="createBoard()"
-        class="w-72 m-5 cursor-pointer border rounded border-transparent hover:border-gray-300 flex items-center justify-center"
+        class="w-72 m-5 cursor-pointer border rounded border-transparent hover:border-gray-300 flex items-center justify-center min-h-[220px]"
       >
         New Board +
       </div>
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import type { Board } from "@/types";
-
-import { useRouter } from "vue-router";
-import { ref } from "vue";
-import type { Ref } from "vue";
-import { useAlerts } from "@/stores/alerts";
-
-const $router = useRouter();
-
-const $alerts = useAlerts();
-
-const boards: Ref<Board[]> = ref([
-  {
-    id: "board-1",
-    title: "Board 1",
-    order: "1",
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    deletedAt: new Date(),
-  },
-  {
-    id: "board-2",
-    title: "Board 2",
-    order: "2",
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    deletedAt: new Date(),
-  },
-  {
-    id: "board-3",
-    title: "Board 3",
-    order: "3",
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    deletedAt: new Date(),
-  },
-]);
-
-const toBoard = (board: Board) => $router.push(`/boards/${board.id}`);
-
-const createBoard = () => {
-  const count = boards.value.length + 1;
-
-  const board: Board = {
-    id: `board-${count}`,
-    title: `Board ${count}`,
-    order: `${count}`,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    deletedAt: new Date(),
-  };
-
-  boards.value.push(board);
-
-  $alerts.success(`Board Created: ${board.title}`);
-};
-</script>
